@@ -1,0 +1,8 @@
+.godot/
+.runtime/
+.runtime*/
+build/
+dist/
+archive/
+assets/sprites/
+*.tmp

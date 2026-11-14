@@ -1,0 +1,477 @@
+{
+  "buildings": [
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Haus",
+      "working": false,
+      "x": 10,
+      "y": 9
+    },
+    {
+      "paused": false,
+      "progress": 0.998082937950752,
+      "tier": 1,
+      "type": "Forsthaus",
+      "working": true,
+      "x": 15,
+      "y": 8
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 7,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 8,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 9,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 10,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 11,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 12,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 13,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 14,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 15,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 16,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 17,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 18,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 12,
+      "y": 9
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 12,
+      "y": 10
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 12,
+      "y": 11
+    },
+    {
+      "paused": false,
+      "progress": 1.0,
+      "tier": 1,
+      "type": "Feld",
+      "working": false,
+      "x": 14,
+      "y": 10
+    },
+    {
+      "paused": false,
+      "progress": 1.0,
+      "tier": 1,
+      "type": "Feld",
+      "working": false,
+      "x": 15,
+      "y": 10
+    },
+    {
+      "paused": false,
+      "progress": 1.0,
+      "tier": 1,
+      "type": "Feld",
+      "working": false,
+      "x": 14,
+      "y": 11
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Baum",
+      "working": false,
+      "x": 5,
+      "y": 5
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Baum",
+      "working": false,
+      "x": 6,
+      "y": 6
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Baum",
+      "working": false,
+      "x": 7,
+      "y": 4
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Baum",
+      "working": false,
+      "x": 20,
+      "y": 17
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Baum",
+      "working": false,
+      "x": 21,
+      "y": 18
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Baum",
+      "working": false,
+      "x": 19,
+      "y": 18
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Baum",
+      "working": false,
+      "x": 5,
+      "y": 17
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Blumenbeet",
+      "working": false,
+      "x": 9,
+      "y": 10
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 7,
+      "y": 10
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 7,
+      "y": 11
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 7,
+      "y": 9
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Haus",
+      "working": false,
+      "x": 8,
+      "y": 13
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Haus",
+      "working": false,
+      "x": 11,
+      "y": 13
+    },
+    {
+      "paused": false,
+      "progress": 1.0,
+      "tier": 1,
+      "type": "Feld",
+      "working": false,
+      "x": 15,
+      "y": 11
+    },
+    {
+      "paused": false,
+      "progress": 1.0,
+      "tier": 1,
+      "type": "Feld",
+      "working": false,
+      "x": 16,
+      "y": 11
+    },
+    {
+      "paused": false,
+      "progress": 1.0,
+      "tier": 1,
+      "type": "Feld",
+      "working": false,
+      "x": 16,
+      "y": 10
+    },
+    {
+      "paused": false,
+      "progress": 0.659657148498789,
+      "tier": 1,
+      "type": "Forsthaus",
+      "working": true,
+      "x": 5,
+      "y": 9
+    },
+    {
+      "paused": false,
+      "progress": 0.610642963876631,
+      "tier": 1,
+      "type": "Steinbruch",
+      "working": true,
+      "x": 16,
+      "y": 13
+    },
+    {
+      "paused": false,
+      "progress": 0.0136182659781907,
+      "tier": 1,
+      "type": "Saegewerk",
+      "working": true,
+      "x": 13,
+      "y": 13
+    },
+    {
+      "paused": false,
+      "progress": 0.000237208874461992,
+      "tier": 1,
+      "type": "Muehle",
+      "working": false,
+      "x": 10,
+      "y": 7
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 25,
+      "y": 13
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 19,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 20,
+      "y": 12
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 20,
+      "y": 13
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 21,
+      "y": 13
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 22,
+      "y": 13
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 23,
+      "y": 13
+    },
+    {
+      "paused": false,
+      "progress": 0.0,
+      "tier": 1,
+      "type": "Weg",
+      "working": false,
+      "x": 24,
+      "y": 13
+    }
+  ],
+  "contract_index": 0,
+  "contract_time": 0.0,
+  "elapsed": 2014.22232187809,
+  "expansion": 1,
+  "gather_time": 0.0,
+  "market_time": 0.0,
+  "meals": 84,
+  "produced": {
+    "bretter": 390.0,
+    "getreide": 54.0,
+    "holz": 2214.0,
+    "mehl": 39.0,
+    "muenzen": 18,
+    "nahrung": 12,
+    "stein": 544.0
+  },
+  "quest": 5,
+  "resources": {
+    "beeren": 0,
+    "bretter": 360,
+    "brot": 0,
+    "getreide": 2,
+    "holz": 1438,
+    "honig": 0,
+    "marmelade": 0,
+    "mehl": 39,
+    "muenzen": 170,
+    "nahrung": 0,
+    "stein": 536
+  },
+  "settings": {
+    "camera_x": 143.706481933594,
+    "camera_y": 389.743286132813,
+    "grid": false,
+    "nightlight": false,
+    "sound": false,
+    "zoom": 0.911935925483704
+  },
+  "speed": 1.0,
+  "version": 2,
+  "xp": 1764
+}
