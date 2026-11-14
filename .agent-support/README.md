@@ -1,0 +1,8 @@
+# Automatische Hilfen: Mooswinkel
+Ab dem naechsten neuen Codex-/Claude-Chat im Projektordner verwenden die Projektregeln die passenden Hilfen. Kein Namensaufruf erforderlich. Regeln: [workflow.md](workflow.md). Claude-Hooks werden nach Neustart/erneutem Laden der Projekteinstellungen aktiv; bei einer Vertrauensabfrage die geprueften Projektdateien akzeptieren.
+
+Beispiele: "Behebe diesen Fehler", "Verbessere diese Oberflaeche", "Plane diese groessere Funktion", "Erstelle ein Ablaufdiagramm". Nur passende Hilfen werden ausgewaehlt. Die genauen installierten Hilfen stehen in profile.json. Quellversionen sind festgehalten; keine automatischen Fremd-Updates. Nicht installierte Alternativen: Superpowers, Taste, Hallmark und die interviewlastigen Matt-Pocock-Orchestratoren.
+
+Grenzen: Die Einrichtung testet Pfade, Routing, Erhalt bestehender Einstellungen und Hook-Ausgabe. Eine echte neue KI-Sitzung bleibt ein Verhaltenstest und kann durch App-/Vertrauens-/Tool-Einstellungen beeinflusst werden. Keine harte Durchsetzung und kein Nachweis, dass jeder installierte Skill schon einen kompletten Produktauftrag durchlaufen hat. Impeccables Windows-Engine ist mit gepruefter SHA-256-Pruefsumme enthalten; Versionsaufruf getestet, kompletter UI-Auftrag noch nicht ausgefuehrt. Alle Projektfunktionen bleiben unveraendert.
+
+Ruecknahme: Vor Installation gesicherte AGENTS.md/CLAUDE.md/.claude/settings.json aus `.agent-support/backups/` zurueckkopieren; bei urspruenglich nicht vorhandenen Dateien den markierten Hilfe-Block entfernen. Neue Skill-Ordner erst entfernen, wenn sie nicht mehr verwendet werden. Keine bestehenden Graphify-Hooks entfernen.

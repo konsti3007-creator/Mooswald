@@ -1,0 +1,26 @@
+[
+  {
+    "name": "ponytail",
+    "repo": "DietrichGebert/ponytail",
+    "commit": "96608e078b2d5ea607c5c3b8b5a54d1c1fba6846",
+    "path": "skills/ponytail"
+  },
+  {
+    "name": "codebase-design",
+    "repo": "mattpocock/skills",
+    "commit": "5863806dd4e15c63174bee4e7515a4256792ecfa",
+    "path": "skills/engineering/codebase-design"
+  },
+  {
+    "name": "diagnosing-bugs",
+    "repo": "mattpocock/skills",
+    "commit": "5863806dd4e15c63174bee4e7515a4256792ecfa",
+    "path": "skills/engineering/diagnosing-bugs"
+  },
+  {
+    "name": "diagram-design",
+    "repo": "cathrynlavery/diagram-design",
+    "commit": "f6db0decea96de66b901331a0f79a8d4b147ebae",
+    "path": "skills/diagram-design"
+  }
+]

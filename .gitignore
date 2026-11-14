@@ -6,3 +6,8 @@ dist/
 archive/
 assets/sprites/
 *.tmp
+
+# Local assistant runtimes and setup backups
+**/impeccable/scripts/bin/
+.agent-support/backups/
+backup-redaktionsplan-*/
