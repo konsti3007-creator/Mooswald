@@ -1,4 +1,4 @@
-# Testbericht – 0.7.0
+# Testbericht – 0.8.0
 
 Datum: 13. November 2026. Windows 11, Godot 4.7.2 stable, GL Compatibility, AMD Radeon RX 6700 XT. Alle Tests laufen im Buildskript mit isoliertem Profil (`.runtime`).
 
@@ -50,6 +50,13 @@ Langlauf: Mit Lagergrenzen und Herstellungswünschen blieb der Bot 4,5 Stunden o
 Fehlerbericht „Anglerhütte nicht baubar, manche Häuser nicht ausbaubar“ am echten Spielstand untersucht: Mit genug Waren sind Anglerhütte (81 Stellen am Wasser) und alle ausbaufähigen Gebäude baubar; Ursache war Geldmangel (22 Münzen) bei sehr großen Holz-/Bretterbeständen, ohne dass das Spiel das klar sagte. Behoben durch genaue Meldungen, Hinweis am Mauszeiger und Direktverkauf; geprüft mit einer Kopie des Spielstands (`build/qa/info_catalog.png`, `info_bewohner.png`) und automatisch (`phase2_test`, hints).
 
 Tiere: `tests/animal_sheet.gd` rendert alle 8 Arten in 8 Richtungen und alle Bewegungen (`build/qa/animals_*.png`); gefunden und behoben: Ente beim Schwimmen unsichtbar (Zeichenverschiebung zurückgesetzt). `tests/qa3.gd` zeigt Gehege mit Tieren, fütternde Hirtinnen, Wildtiere und schlafende Tiere am Abend (`p3_*.png`); gefunden und behoben: Absturz beim Vorderzaun, Hirtin stand auf dem Zaun.
+
+## 0.8 – Prüfung
+
+- Fehlerdiagnose „Verschieben funktioniert nicht korrekt“ mit Rückkopplungstest auf einer Kopie des echten Spielstands (`tests/move_pick.gd`, echte Darstellung): vorher 0/5 korrekte Auswahl bei Klick aufs Dach (Objekt dahinter wurde gewählt, auch beim Abriss), nachher 24/24 Verschiebungen und 6/6 Dachklicks korrekt (echte Verdeckung durch Bäume davor zählt als korrekt).
+- Alle Regelsuiten unverändert grün (211, 46, 96, 23, 51 Prüfungen), Laufzeitprüfung mit der neuen Oberfläche grün, Komplettdurchlauf im Buildskript.
+- Sichtprüfung `tests/qa08.gd` (`build/qa/v08_day.png`, `v08_night.png`): neue Kopfleiste, Werkzeugleiste, ausgeklapptes Baumenü, alle acht Bewohnerhäuser, Nacht mit leuchtenden Fenstern, Laternen, Glühwürmchen. Gefunden und behoben: Kopfleiste lief rechts über, unterster Werkzeugknopf angeschnitten, Kartentext lief über.
+- Tierstil: Vergleichsbogen Waldling/Tiere (`tests/animal_sheet.gd`).
 
 ## Grenzen dieser Prüfung – ehrlich
 

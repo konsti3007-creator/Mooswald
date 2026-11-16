@@ -23,6 +23,7 @@ class ObjectNode extends Node2D:
 	var data: Dictionary = {}
 	var fade := 1.0
 	var rect := Rect2()
+	var pick_tex: Texture2D
 	func _draw() -> void:
 		world.draw_object(self)
 
@@ -49,6 +50,9 @@ var mat_ground: ShaderMaterial
 var season_w := [1.0, 0.0, 0.0, 0.0]
 var weather_timer := 0.0
 var animals_view
+var lights: Layer
+var night := 0.0
+var fireflies: Array = []
 var pen_fronts: Dictionary = {}
 const FOLIAGE_TYPES := ["Wildbaum", "Baum", "Scenery", "Strauch", "Blumenbeet", "Beeren", "Feld"]
 
@@ -86,6 +90,15 @@ func setup(owner_game) -> void:
 	overlay.z_index = 20
 	add_child(overlay)
 	animals_view = AnimalsView.new(self)
+	# Night lights are drawn additively over the darkened world.
+	lights = Layer.new()
+	lights.painter = _paint_lights
+	lights.z_index = 22
+	var add := CanvasItemMaterial.new()
+	add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	lights.material = add
+	add_child(lights)
+	for i in range(46): fireflies.append(Vector2(randf_range(-1300, 1500), randf_range(-100, 1500)))
 
 func village():
 	return game.village
@@ -243,6 +256,8 @@ func update(delta: float, game_delta: float) -> void:
 		view.refresh(visual_time)
 	water_layer.queue_redraw()
 	overlay.queue_redraw()
+	night = night_factor(fmod(v.elapsed / 240 * 24 + 7, 24))
+	lights.queue_redraw()
 
 ## Screen rect of what the player is looking at (selection or build cursor):
 ## objects in front of it become transparent.
@@ -522,8 +537,7 @@ func draw_object(node: ObjectNode) -> void:
 		var wobble := Vector2.ZERO
 		if shakes.has(b.id) and kind == "Beeren": wobble = Vector2(sin(visual_time * 60.0) * 1.5, 0)
 		_sprite_at(node, c, kind, shift + wobble)
-	if Model.DEFS[kind].has("special"): _emblem(node, p, Model.SPECIALISTS[Model.DEFS[kind].special].sign)
-	elif Model.DEFS[kind].has("sign"): _emblem(node, p, Model.DEFS[kind].sign)
+	if Model.DEFS[kind].has("sign"): _emblem(node, p, Model.DEFS[kind].sign)
 	if b.tier > 1:
 		for i in range(b.tier):
 			node.draw_circle(p + Vector2(i * 7 - 4, -112 if big else -60), 2.3, Color("ffe49b"))
@@ -702,6 +716,56 @@ func _pen_fence(node: ObjectNode, kind: String, shift: Vector2, front: bool) -> 
 	if front:
 		node.rect = Rect2(d[3] + shift + node.position + Vector2(0, -20), Vector2(d[1].x - d[3].x, 40))
 
+## 0 by day, 1 at night, smooth at dusk (18-20 h) and dawn (5-7 h).
+static func night_factor(hour: float) -> float:
+	if hour >= 20.0 or hour < 5.0: return 1.0
+	if hour >= 18.0: return (hour - 18.0) / 2.0
+	if hour < 7.0: return 1.0 - (hour - 5.0) / 2.0
+	return 0.0
+
+func art_key(kind: String) -> String:
+	var d: Dictionary = Model.DEFS.get(kind, {})
+	return d.get("art", kind)
+
+func _glow(ci: CanvasItem, at: Vector2, radius: float, col: Color, strength: float) -> void:
+	for i in range(6):
+		var t := float(i) / 6.0
+		ci.draw_circle(at, radius * (1.0 - t * 0.82), Color(col.r, col.g, col.b, strength * (0.05 + t * 0.07)))
+
+## Additive light: lit windows, lanterns, glowing ovens, woodlings' little
+## lamps on night walks and fireflies.
+func _paint_lights(ci: CanvasItem) -> void:
+	if night < 0.02: return
+	var v = village()
+	var flicker := 0.92 + 0.08 * sin(visual_time * 7.3)
+	var warm := Color(1.0, 0.72, 0.32)
+	for node in building_nodes.values():
+		if node.rect.size.x <= 0 or node.modulate.a < 0.5: continue
+		var key := art_key(node.data.type)
+		if not Model.WINDOW_LIGHTS.has(key): continue
+		var lantern := key == "Laterne"
+		for uv in Model.WINDOW_LIGHTS[key]:
+			var at: Vector2 = node.rect.position + uv * node.rect.size
+			var phase: float = sin(visual_time * 2.1 + at.x * 0.05) * 0.06
+			if lantern:
+				_glow(ci, at, 46.0, warm, night * flicker)
+				ci.draw_set_transform(at + Vector2(0, 46), 0, Vector2(1, 0.45))
+				_glow(ci, Vector2.ZERO, 60.0, warm, night * 0.7)
+				ci.draw_set_transform(Vector2.ZERO)
+			else:
+				_glow(ci, at, 20.0, warm, night * (0.9 + phase))
+				ci.draw_circle(at, 3.2, Color(1.0, 0.85, 0.5, 0.55 * night))
+	for view in resident_nodes.values():
+		if view.visible and view.resident.anim in ["walk", "carry_walk"]:
+			_glow(ci, view.position + Vector2(8, -30), 22.0, warm, night * 0.55)
+	for i in range(fireflies.size()):
+		var base: Vector2 = fireflies[i]
+		var p := base + Vector2(sin(visual_time * 0.33 + i) * 30, cos(visual_time * 0.47 + i * 1.3) * 16)
+		var blink := maxf(0.0, sin(visual_time * 1.6 + i * 2.1))
+		if blink <= 0.05: continue
+		ci.draw_circle(p, 5.0, Color(0.75, 1.0, 0.35, 0.12 * blink * night))
+		ci.draw_circle(p, 1.8, Color(0.95, 1.0, 0.6, 0.8 * blink * night))
+
 ## Little hearts when the player says hello to an animal.
 func hearts(at: Vector2) -> void:
 	for i in range(4):
@@ -728,6 +792,7 @@ func _sprite_at(node: ObjectNode, c: Vector2i, kind: String, shift: Vector2, tin
 	var rect := Rect2(p - Vector2(size.x / 2, size.y - 17 * scale), size)
 	node.draw_texture_rect(game.art[kind], rect, false, tint)
 	node.rect = Rect2(rect.position + node.position, rect.size)
+	node.pick_tex = game.art[kind]
 
 func _sprite(node: ObjectNode, at: Vector2, kind: String, tint: Color, scale: float) -> void:
 	var size := _sprite_size(kind) * scale
@@ -946,17 +1011,11 @@ func _paint_overlay(ci: CanvasItem) -> void:
 			ci.draw_circle(bp + Vector2(-1, -1.5), 1.0, Color(1, 1, 1, 0.6))
 		else:
 			ci.draw_rect(Rect2(p.pos - Vector2(p.size, p.size) * 0.5, Vector2(p.size, p.size * 0.7)), Color(col.r, col.g, col.b, col.a * minf(1.0, a * 1.5)))
-	var hour: float = fmod(v.elapsed / 240 * 24 + 7, 24)
-	if not game.dark and (hour > 19 or hour < 6):
-		ci.draw_rect(Rect2(Vector2(-2400, -1200), Vector2(5400, 4600)), Color(0.04, 0.1, 0.24, 0.34))
-		for c in v.buildings:
-			if v.buildings[c].type == "Laterne":
-				var glow := cell_pos(c) + Vector2(4, -47)
-				for radius in range(6, 40, 5): ci.draw_circle(glow, radius, Color(1, 0.82, 0.4, 0.035))
-		for i in range(sparks.size()):
-			var point: Vector2 = sparks[i] + Vector2(sin(visual_time * 0.3 + i) * 22, cos(visual_time * 0.5 + i) * 12)
-			ci.draw_circle(point, 1.8, Color(0.95, 0.96, 0.5, (sin(visual_time * 1.7 + i) + 1) * 0.35))
-	else:
+	if night > 0.01:
+		# Dusk and night: a deep blue veil; the lights layer glows on top.
+		var veil := night * (0.22 if game.dark else 0.5)
+		ci.draw_rect(Rect2(Vector2(-2600, -1400), Vector2(5800, 5000)), Color(0.03, 0.06, 0.2, veil))
+	if night < 0.5:
 		for i in range(4):
 			var bird := Vector2(fmod(visual_time * 18 + i * 370, 1600) - 800, 200 + i * 180 + sin(visual_time + i) * 12)
 			var flap := sin(visual_time * 6 + i) * 4
@@ -968,14 +1027,31 @@ func building_at(world_pos: Vector2) -> Vector2i:
 	var best := Vector2i(-1, -1)
 	var best_y := -INF
 	for node in building_nodes.values():
-		if node.rect.size.x <= 0: continue
-		var kind: String = node.data.type
-		var inner: Rect2 = node.rect.grow_individual(-node.rect.size.x * 0.18, -node.rect.size.y * 0.12, -node.rect.size.x * 0.18, -node.rect.size.y * 0.06)
-		if kind == "Feld": inner = node.rect
-		if inner.has_point(world_pos) and node.position.y > best_y:
-			best_y = node.position.y
-			best = node.cell
+		if node.rect.size.x <= 0 or not node.rect.has_point(world_pos) or node.position.y <= best_y: continue
+		if node.pick_tex != null and not _opaque(node.pick_tex, node.rect, world_pos): continue
+		best_y = node.position.y
+		best = node.cell
 	return best
+
+var _pick_images: Dictionary = {}
+
+## Pixel-exact hit test against the painted picture (alpha > 0.3).
+func _opaque(tex: Texture2D, rect: Rect2, world_pos: Vector2) -> bool:
+	var uv := (world_pos - rect.position) / rect.size
+	var region := Rect2(Vector2.ZERO, tex.get_size())
+	var source: Texture2D = tex
+	if tex is AtlasTexture:
+		region = tex.region
+		source = tex.atlas
+	if not _pick_images.has(source):
+		var img: Image = source.get_image()
+		if img == null: return true
+		if img.is_compressed(): img.decompress()
+		_pick_images[source] = img
+	var image: Image = _pick_images[source]
+	var px := Vector2i(region.position + uv * region.size)
+	if px.x < 0 or px.y < 0 or px.x >= image.get_width() or px.y >= image.get_height(): return false
+	return image.get_pixelv(px).a > 0.3
 
 ## Resident under the mouse (feet within the figure's silhouette).
 func resident_at(world_pos: Vector2) -> int:

@@ -1,9 +1,11 @@
 extends SceneTree
 ## Visual QA: every animal species in 8 directions and its animations.
 const Rig = preload("res://scripts/anim/animal_rig.gd")
+const Woodling = preload("res://scripts/anim/woodling_rig.gd")
 
 class Sheet extends Node2D:
 	var rig = Rig.new()
+	var wrig = Woodling.new()
 	var mode := 0
 	func _draw() -> void:
 		draw_rect(Rect2(Vector2.ZERO, Vector2(2000, 1600)), Color("8fb36a"))
@@ -19,6 +21,10 @@ class Sheet extends Node2D:
 					if sp == "ente": anims[4] = ["swim", 2]
 					rig.draw(self, sp, anims[j][0], anims[j][1], 0.785, 3.2)
 				draw_set_transform(Vector2.ZERO)
+			# A woodling for style comparison at the start of every row.
+			draw_set_transform(Vector2(40, 120 + i * 120))
+			wrig.draw(self, Woodling.pose("idle", 0), 0.785, 2.2, i)
+			draw_set_transform(Vector2.ZERO)
 			draw_string(ThemeDB.fallback_font, Vector2(4, 125 + i * 120), sp, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.BLACK)
 
 func _initialize() -> void:

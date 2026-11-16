@@ -1,6 +1,6 @@
 # Mooswinkel – Dein kleines Walddorf
 
-**Entwicklungsfassung 0.7.0 – Tiere**, 13. November 2026. Keine Vollversion; Stand und offene Punkte: [STATUS](docs/STATUS.md).
+**Entwicklungsfassung 0.8.0 – Neues Gesicht, Nachtlicht und eigene Häuser**, 13. November 2026. Keine Vollversion; Stand und offene Punkte: [STATUS](docs/STATUS.md).
 
 Das vollständige Projekt liegt jetzt unter **E:\Unternehmen\Spielerei\Mooswinkel**. Die frühere Projektkopie unter Maniac wurde nach einem Dateivergleich entfernt. Die editierbare Fassung 0.2 bleibt als ZIP unter `archive/0.2` erhalten.
 
@@ -14,6 +14,13 @@ Im Windows-Spielordner **Mooswinkel.exe** starten. Das Spiel startet jetzt im Vo
 - Godot-Projekt: `project.godot` in Godot importieren, F5 drücken.
 
 Mit der vorhandenen Godot-Version **4.7.2 stable** unter Windows getestet. GDScript, GL Compatibility, keine Zusatzpakete oder kostenpflichtigen Abhängigkeiten. Da keine Exporttemplates installiert sind, enthält die portable Spielversion eine Kopie der vorhandenen Godot-Engine plus exportiertem PCK. Sie ist deshalb größer als ein regulärer Releaseexport.
+
+## Neu in 0.8
+
+- Logo, neue Oberfläche mit Symbolen und ausklappbarem Baumenü.
+- Eigene gemalte Bilder für alle acht Bewohnerhäuser.
+- Nachts leuchten Fenster, Laternen und Glühwürmchen.
+- Verschieben und Abriss treffen genau das angeklickte Bild.
 
 ## Neu in 0.7
 

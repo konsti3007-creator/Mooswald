@@ -1,4 +1,4 @@
-﻿# Stand und offene Aufgaben – 0.7.0
+﻿# Stand und offene Aufgaben – 0.8.0
 
 **Entwicklungsfassung. Keine Vollversion.** Etappen A–D sind im Spiel umgesetzt und automatisiert geprüft; Etappe E (Wirtschaft, Inhalte, Oberfläche, Veröffentlichung) ist begonnen, aber nicht abgeschlossen.
 
@@ -16,7 +16,7 @@
 
 Kategorie „Bewohner“, je Haus genau einmal baubar, jedes bringt einen bestimmten Waldling mit Effekt:
 Birka (Holzmeisterin, +2 Holz/Gang) · Ilvi (Gärtnerin, Beete +20 %) · Kolbo (Steinkundiger, +2 Stein, Findlinge schneller) · Zimmerling (Baumeister, Ausbau −20 %) · Mehlwin (Bäcker, +1 Brot) · Summa (Imkerin, +1 Honig) · Salbei (Kräuterkundige, doppelte Erholung, −25 % Nahrung) · Taler (Händler, +30 % Verkauf, +20 % Auftragslohn).
-Die Häuser nutzen vorerst das Wurzelhäuschen-Motiv mit eigenem Schild; eigene Hausgrafiken fehlen.
+Seit 0.8 hat jedes dieser Häuser ein eigenes gemaltes Bild.
 
 ## Ausbauplan
 
@@ -37,7 +37,7 @@ Der weitere Ausbau folgt [PLAN.md](PLAN.md). Stand der Phasen:
 3. Neue Gebäude (Anglerhütte, Vorratsscheune, Räucherkate) nutzen vorhandene Bilder mit Schild; eigene Grafiken fehlen. Feldfrüchte färben sich im Herbst mit dem Laub um.
 4. Rechte Reiterleiste ist bei 4 Reitern knapp; kleine Bildschirme nicht geprüft.
 5. Im Winter liegt auf Gebäudedächern nur wenig Schnee; im Schnee bleiben vereinzelt grünlich-graue Grasflecken.
-6. Spezialisten-, Wildbaum- und Findlingsgrafik: Spezialisten nur durch Farbe/Schild unterscheidbar; Findlinge und Stümpfe sind Vektorgrafik und etwas flacher als die gemalten Gebäude.
+6. Findlinge, Stümpfe und Gehege sind Vektorgrafik und etwas flacher als die gemalten Gebäude; Anglerhütte, Vorratsscheune, Räucherkate und Käserei nutzen noch Platzhalterbilder mit Schild.
 7. Kein Zurück-Weg für Bewohner, die dauerhaft blockiert sind, außer Neuversuch; keine Benachrichtigung über die Statusleiste.
 8. Nach dem Laden eines migrierten Standes kann die erste Statusmeldung von einer anderen Meldung überdeckt werden.
 

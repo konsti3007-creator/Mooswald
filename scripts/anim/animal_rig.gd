@@ -20,14 +20,14 @@ const CYCLE := {"huhn": 7.0, "ente": 7.0, "schaf": 12.0, "ziege": 13.0, "reh": 2
 ## Species: body half-axes (side, length, height), body height, leg layout,
 ## colours and extras.
 const SPECIES := {
-	"huhn": {"body": Vector3(3.2, 4.2, 3.4), "bz": 6.0, "legs": 2, "leg": 4.0, "head": 2.2, "neck": Vector3(0, 3.6, 4.0), "col": Color("f2ede0"), "col2": Color("d9cdb4"), "leg_col": Color("e2a33a"), "extra": "chicken"},
-	"ente": {"body": Vector3(3.4, 5.0, 3.0), "bz": 4.6, "legs": 2, "leg": 2.6, "head": 2.2, "neck": Vector3(0, 4.0, 4.0), "col": Color("f4f1ea"), "col2": Color("d8d2c2"), "leg_col": Color("e8932e"), "extra": "duck"},
-	"schaf": {"body": Vector3(5.2, 7.6, 5.0), "bz": 9.0, "legs": 4, "leg": 5.4, "head": 2.8, "neck": Vector3(0, 7.6, 3.2), "col": Color("f2eee4"), "col2": Color("d8d0bf"), "leg_col": Color("3d3430"), "head_col": Color("3d3430"), "extra": "wool"},
-	"ziege": {"body": Vector3(4.2, 7.4, 4.4), "bz": 10.4, "legs": 4, "leg": 7.0, "head": 2.8, "neck": Vector3(0, 7.2, 5.0), "col": Color("d9c8a8"), "col2": Color("b39a74"), "leg_col": Color("8a7356"), "extra": "goat"},
-	"reh": {"body": Vector3(4.6, 9.6, 5.0), "bz": 16.0, "legs": 4, "leg": 12.0, "head": 3.0, "neck": Vector3(0, 9.4, 8.0), "col": Color("b8794a"), "col2": Color("8f5a34"), "leg_col": Color("8f5a34"), "extra": "deer"},
-	"hase": {"body": Vector3(2.8, 4.6, 3.0), "bz": 4.0, "legs": 4, "leg": 2.8, "head": 2.2, "neck": Vector3(0, 4.2, 2.4), "col": Color("a88a6a"), "col2": Color("86684a"), "leg_col": Color("86684a"), "extra": "hare", "hop": true},
-	"eichhoernchen": {"body": Vector3(2.2, 3.6, 2.6), "bz": 3.4, "legs": 4, "leg": 2.2, "head": 1.9, "neck": Vector3(0, 3.2, 2.6), "col": Color("c0602a"), "col2": Color("94461e"), "leg_col": Color("94461e"), "extra": "squirrel", "hop": true},
-	"igel": {"body": Vector3(3.0, 4.2, 2.6), "bz": 2.8, "legs": 4, "leg": 1.4, "head": 1.6, "neck": Vector3(0, 4.0, 0.0), "col": Color("6e5a46"), "col2": Color("4e3e30"), "leg_col": Color("8a6e56"), "head_col": Color("c9a985"), "extra": "hedgehog"},
+	"huhn": {"body": Vector3(3.2, 4.2, 3.4), "bz": 6.0, "legs": 2, "leg": 4.0, "head": 3.0, "neck": Vector3(0, 3.6, 4.0), "col": Color("f6efdf"), "col2": Color("e1cfae"), "leg_col": Color("e8a94a"), "extra": "chicken"},
+	"ente": {"body": Vector3(3.4, 5.0, 3.0), "bz": 4.6, "legs": 2, "leg": 2.6, "head": 3.0, "neck": Vector3(0, 4.0, 4.0), "col": Color("f4f1ea"), "col2": Color("d8d2c2"), "leg_col": Color("e8932e"), "extra": "duck"},
+	"schaf": {"body": Vector3(5.2, 7.6, 5.0), "bz": 9.0, "legs": 4, "leg": 5.4, "head": 3.8, "neck": Vector3(0, 7.6, 3.2), "col": Color("f2eee4"), "col2": Color("d8d0bf"), "leg_col": Color("3d3430"), "head_col": Color("3d3430"), "extra": "wool"},
+	"ziege": {"body": Vector3(4.2, 7.4, 4.4), "bz": 10.4, "legs": 4, "leg": 7.0, "head": 3.8, "neck": Vector3(0, 7.2, 5.0), "col": Color("e2cfa8"), "col2": Color("bf9f72"), "leg_col": Color("8f7454"), "extra": "goat"},
+	"reh": {"body": Vector3(4.6, 9.6, 5.0), "bz": 16.0, "legs": 4, "leg": 12.0, "head": 4.1, "neck": Vector3(0, 9.4, 8.0), "col": Color("c98a54"), "col2": Color("9a6438"), "leg_col": Color("9a6438"), "extra": "deer"},
+	"hase": {"body": Vector3(2.8, 4.6, 3.0), "bz": 4.0, "legs": 4, "leg": 2.8, "head": 3.0, "neck": Vector3(0, 4.2, 2.4), "col": Color("b9946c"), "col2": Color("8f6e4c"), "leg_col": Color("8f6e4c"), "extra": "hare", "hop": true},
+	"eichhoernchen": {"body": Vector3(2.2, 3.6, 2.6), "bz": 3.4, "legs": 4, "leg": 2.2, "head": 2.6, "neck": Vector3(0, 3.2, 2.6), "col": Color("cf7434"), "col2": Color("a05428"), "leg_col": Color("a05428"), "extra": "squirrel", "hop": true},
+	"igel": {"body": Vector3(3.0, 4.2, 2.6), "bz": 2.8, "legs": 4, "leg": 1.4, "head": 2.2, "neck": Vector3(0, 4.0, 0.0), "col": Color("6e5a46"), "col2": Color("4e3e30"), "leg_col": Color("8a6e56"), "head_col": Color("c9a985"), "extra": "hedgehog"},
 }
 
 var f := Vector2(0, 1)
@@ -169,7 +169,12 @@ func _shaded(c: Vector3, ax: Vector3, col: Color, pitch := 0.0, outline := true)
 	_fan(hull, col.darkened(0.12))
 	var hi := _hull(c + Vector3(-ax.x * 0.15, 0, ax.z * 0.2), ax * 0.78, pitch)
 	if hi.size() >= 3: _fan(hi, col)
-	if outline: ci.draw_polyline(hull, OUTLINE, 0.7 * s, true)
+	var glint := _hull(c + Vector3(-ax.x * 0.35, ax.y * 0.1, ax.z * 0.55), ax * 0.32, pitch)
+	if glint.size() >= 3: _fan(glint, col.lightened(0.12))
+	if outline:
+		var closed := hull.duplicate()
+		if closed.size() > 0 and closed[0] != closed[closed.size() - 1]: closed.append(closed[0])
+		ci.draw_polyline(closed, OUTLINE, 0.75 * s, true)
 
 func _leg(root: Vector3, foot: Vector3, col: Color) -> void:
 	ci.draw_line(P(root), P(foot), OUTLINE, 2.4 * s, true)
@@ -199,6 +204,13 @@ func _body(c: Vector3, ax: Vector3, col: Color, col2: Color, pitch: float, speci
 				ci.draw_line(p, p + Vector2(sin(az) * 1.6, -1.8) * s, col.darkened(0.35), 0.8 * s, true)
 		_:
 			_shaded(c, ax, col, pitch)
+			if sp.extra in ["hare", "squirrel", "deer", "goat"]:
+				# Lighter belly and chest, painted-in fur strokes on the back.
+				_shaded(c + Vector3(0, ax.y * 0.35, -ax.z * 0.35), Vector3(ax.x * 0.7, ax.y * 0.55, ax.z * 0.5), col.lightened(0.28), pitch, false)
+				for j in range(5):
+					var az := -0.6 + j * 0.3
+					var top := c + Vector3(sin(az) * ax.x * 0.5, cos(az) * ax.y * 0.4 - ax.y * 0.3, ax.z * 0.92)
+					ci.draw_line(P(top), P(top + Vector3(0, -0.9, 0.5)), col.darkened(0.22), 0.6 * s, true)
 			if sp.extra in ["chicken", "duck"]:
 				# Folded wing.
 				for side in [-1, 1]:
@@ -236,13 +248,17 @@ func _head(neck_base: Vector3, head: Vector3, species: String, col: Color, sp: D
 			ci.draw_circle(P(head + snout), 0.6 * s, Color("2b2220"))
 	# Eyes on both sides, only where they face the camera.
 	for side in [-1, 1]:
-		var e := head + Vector3(side * ax.x * 0.75, ax.y * 0.35, ax.z * 0.3)
+		var e := head + Vector3(side * ax.x * 0.62, ax.y * 0.48, ax.z * 0.18)
 		if depth(Vector3(side, 0.4, 0)) > -0.1:
 			if lying or (anim == "idle" and frame == 7):
 				ci.draw_line(P(e) + Vector2(-0.6, 0) * s, P(e) + Vector2(0.6, 0) * s, Color("2b2220"), 0.6 * s, true)
 			else:
-				ci.draw_circle(P(e), 0.55 * s, Color("2b2220"))
-				ci.draw_circle(P(e) + Vector2(-0.2, -0.2) * s, 0.2 * s, Color(1, 1, 1, 0.9))
+				var er := 0.8 if sp.legs == 4 else 0.7
+				_ellipse_fill(P(e), er * 0.85 * s, er * 1.15 * s, Color("3b2414"))
+				ci.draw_circle(P(e) + Vector2(-0.25, -0.35) * s, er * 0.38 * s, Color("fff6e6"))
+			var cheek := head + Vector3(side * ax.x * 0.8, ax.y * 0.55, -ax.z * 0.15)
+			if sp.extra not in ["chicken", "duck", "hedgehog"]:
+				ci.draw_circle(P(cheek), 0.9 * s, Color(0.93, 0.5, 0.42, 0.32))
 
 func _ears(head: Vector3, ax: Vector3, sp: Dictionary, behind: bool) -> void:
 	for side in [-1, 1]:
@@ -265,6 +281,9 @@ func _ear(a: Vector3, b: Vector3, col: Color, w: float) -> void:
 	var side := Vector3(0, w, 0)
 	var pts := PackedVector2Array([P(a), P(mid + side), P(b), P(mid - side * 0.6 + up * 0.2)])
 	_fan(pts, col.darkened(0.05))
+	if w >= 0.85:
+		var inner := PackedVector2Array([P(a.lerp(b, 0.15)), P(mid + side * 0.5), P(a.lerp(b, 0.85)), P(mid - side * 0.2)])
+		_fan(inner, Color(0.94, 0.68, 0.62, 0.8))
 	var closed := pts.duplicate()
 	closed.append(pts[0])
 	ci.draw_polyline(closed, OUTLINE, 0.6 * s, true)

@@ -5,6 +5,10 @@ const Model = preload("res://scripts/village.gd")
 const WorldView = preload("res://scripts/view/world_view.gd")
 const Residents = preload("res://scripts/sim/residents.gd")
 const Sfx = preload("res://scripts/audio/sfx.gd")
+const Icons = preload("res://scripts/ui/icons.gd")
+const TOP_GOODS := ["muenzen","nahrung","holz","stein","bretter","getreide","mehl","brot"]
+const CATEGORY_ICONS := {"Wohnen":"wohnen","Bewohner":"bewohner","Ernte":"ernte","Tiere":"tiere","Handwerk":"handwerk","Wege":"wege","Natur":"natur"}
+const TOOL_ICONS := {"Bauen":"bauen","Info":"info","Bewegen":"bewegen","Abriss":"abriss"}
 const TILE := Vector2(72,36)
 const SAVE := "user://village_v1.json"
 const SETTINGS := "user://settings.cfg"
@@ -65,6 +69,19 @@ var main_panels: Array[Control] = []
 var atlas: Texture2D
 var happiness_label: Label
 var first_start := false
+var res_labels: Dictionary = {}
+var res_chips: Dictionary = {}
+var level_label: Label
+var pop_label: Label
+var season_icon: Control
+var tool_buttons: Dictionary = {}
+var cat_buttons: Dictionary = {}
+var drawer: Control
+var drawer_title: Label
+var drawer_open := false
+var toast: Control
+var toast_time := 0.0
+var last_notice := ""
 
 func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color("4f6e3c"))
@@ -79,7 +96,15 @@ func _ready() -> void:
 		art[ordering[index]] = texture
 	art.Feld = load("res://assets/art/Feld.svg")
 	art.Wildbaum = art.Baum
-	for kind in Model.SPECIAL_HOUSES: art[kind] = art.Haus
+	# Every specialist has an own painted house (AiFlix-generated, see docs/ART.md).
+	var houses: Texture2D = load("res://assets/painted/special-houses.png")
+	var house_cell := Vector2(houses.get_size()) / Vector2(4, 2)
+	for index in range(Model.SPECIAL_HOUSES.size()):
+		var house_tex := AtlasTexture.new()
+		house_tex.atlas = houses
+		house_tex.region = Rect2(Vector2(index % 4, index / 4) * house_cell, house_cell)
+		house_tex.filter_clip = true
+		art[Model.SPECIAL_HOUSES[index]] = house_tex
 	# Placeholder pictures until own paintings exist (marked by their sign).
 	for kind in Model.DEFS:
 		if Model.DEFS[kind].has("art"): art[kind] = art[Model.DEFS[kind].art]
@@ -222,43 +247,133 @@ func _button(text_value: String, parent: Node, action: Callable) -> Button:
 	parent.add_child(b)
 	return b
 
+## Round icon button with tooltip (toolbar, speed, menu).
+func _icon_button(kind: String, tip: String, parent: Node, action: Callable, size_px := 40.0) -> Button:
+	var b := Button.new()
+	b.custom_minimum_size = Vector2(size_px, size_px)
+	b.tooltip_text = tip
+	b.focus_mode = Control.FOCUS_NONE
+	b.pressed.connect(action)
+	var icon := Icons.make(kind, size_px - 14.0)
+	icon.position = Vector2(7, 7)
+	b.add_child(icon)
+	parent.add_child(b)
+	return b
+
+## Icon with a number (goods, population).
+func _chip(kind: String, parent: Node) -> Label:
+	var box := HBoxContainer.new()
+	box.add_theme_constant_override("separation", 4)
+	box.mouse_filter = Control.MOUSE_FILTER_PASS
+	parent.add_child(box)
+	box.add_child(Icons.make(kind, 26))
+	var l := _label("0", box, 16)
+	l.custom_minimum_size.x = 30
+	res_chips[kind] = box
+	return l
+
+func _tight(panel_box: VBoxContainer, margin := 6) -> void:
+	var panel: PanelContainer = panel_box.get_parent()
+	var style: StyleBoxFlat = ui_theme.get_stylebox("panel", "PanelContainer").duplicate()
+	style.content_margin_left = margin
+	style.content_margin_right = margin
+	style.content_margin_top = margin
+	style.content_margin_bottom = margin
+	panel.add_theme_stylebox_override("panel", style)
+
+func open_drawer(cat: String) -> void:
+	if drawer_open and category == cat:
+		drawer_open = false
+	else:
+		category = cat
+		drawer_open = true
+		mode = "Bauen"
+		moving = Vector2i(-1,-1)
+		_catalog()
+	drawer.visible = drawer_open and panels_visible
+	_update_ui()
+
 func _setup_ui() -> void:
 	var layer := CanvasLayer.new()
 	add_child(layer)
-	var top := _panel(Vector2(18,16),Vector2(1328,105),layer,"top")
+	# --- top bar: logo, goods as icons with numbers, level, time, controls
+	var top := _panel(Vector2(10,8),Vector2(1346,56),layer,"top")
+	_tight(top, 8)
 	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
 	top.add_child(row)
-	var title := _label("MOOSWINKEL",row,26)
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	clock_label = _label("",row,16)
-	for value in [0,1,2,4]:
-		speed_buttons[value] = _button("Pause" if value == 0 else "%d×" % value,row,func(): village.speed = value; _update_ui())
-	_button("Optionen",row,func(): options.popup_centered(Vector2i(520,470)))
-	_button("Beenden",row,func(): quit_dialog.popup_centered())
-	_button("?",row,func(): tips.popup_centered(Vector2i(700,520)))
-	stats = _label("",top,14)
+	var logo := TextureRect.new()
+	logo.texture = load("res://assets/branding/logo.png")
+	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	logo.custom_minimum_size = Vector2(118, 50)
+	row.add_child(logo)
+	for k in TOP_GOODS: res_labels[k] = _chip(k, row)
+	var more := _icon_button("lager", "Alle Waren und Verkauf (Reiter Lager)", row, func(): right_tabs.current_tab = 3; _show_right(true), 40)
+	more.modulate = Color(1, 1, 1, 0.9)
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(spacer)
+	var lvl := VBoxContainer.new()
+	lvl.add_theme_constant_override("separation", 2)
+	row.add_child(lvl)
+	level_label = _label("Stufe 1", lvl, 15)
 	xp_bar = ProgressBar.new()
-	xp_bar.custom_minimum_size.y = 8
+	xp_bar.custom_minimum_size = Vector2(96, 7)
 	xp_bar.show_percentage = false
-	top.add_child(xp_bar)
-	var left := _panel(Vector2(18,152),Vector2(250,600),layer,"left")
-	_label("DEIN WALDDORF",left,19)
-	var tools := HBoxContainer.new()
-	left.add_child(tools)
+	lvl.add_child(xp_bar)
+	pop_label = _chip("waldlinge", row)
+	var season_box := HBoxContainer.new()
+	row.add_child(season_box)
+	season_icon = Icons.make("fruehling", 26)
+	season_box.add_child(season_icon)
+	clock_label = _label("", season_box, 15)
+	for value in [0,1,2,4]:
+		speed_buttons[value] = _icon_button("pause" if value == 0 else "x%d" % value, "Pause (Leertaste)" if value == 0 else "%d-fache Geschwindigkeit" % value, row, func(): village.speed = value; _update_ui(), 36)
+	_icon_button("optionen", "Optionen", row, func(): options.popup_centered(Vector2i(540,560)), 36)
+	_icon_button("hilfe", "Hilfe", row, func(): tips.popup_centered(Vector2i(700,520)), 36)
+	_icon_button("beenden", "Speichern und beenden (Strg+Q)", row, func(): quit_dialog.popup_centered(), 36)
+	# --- left tool bar: modes, building categories, quick actions
+	var left := _panel(Vector2(10,84),Vector2(52,600),layer,"left")
+	_tight(left, 6)
+	left.add_theme_constant_override("separation", 3)
 	for tool in ["Bauen","Info","Bewegen","Abriss"]:
-		var b := _button(tool,tools,func(): mode = tool; moving = Vector2i(-1,-1); _update_ui())
-		b.add_theme_font_size_override("font_size",12)
-		b.tooltip_text = {"Bauen":"Ausgewähltes Motiv in die Welt setzen","Info":"Gebäude oder Waldlinge anklicken","Bewegen":"Gebäude anklicken, dann Zielplatz","Abriss":"Gebäude entfernen, Hälfte der Kosten zurück"}[tool]
-	var categories := OptionButton.new()
-	category_selector = categories
-	for name in CATEGORIES: categories.add_item(name)
-	categories.select(CATEGORIES.find("Wege"))
-	categories.item_selected.connect(func(index): category = categories.get_item_text(index); _catalog())
-	left.add_child(categories)
+		var tip: String = {"Bauen":"Bauen: Baumenü öffnen","Info":"Info: Gebäude, Waldlinge und Tiere anklicken","Bewegen":"Bewegen: Gebäude anklicken, dann Zielplatz","Abriss":"Abriss: Gebäude entfernen (Hälfte der Kosten zurück)"}[tool]
+		tool_buttons[tool] = _icon_button(TOOL_ICONS[tool], tip, left, func():
+			if tool == "Bauen":
+				open_drawer(category)
+			else:
+				mode = tool
+				moving = Vector2i(-1,-1)
+				drawer_open = false
+				drawer.visible = false
+			_update_ui())
+	left.add_child(HSeparator.new())
+	for cat in CATEGORIES:
+		cat_buttons[cat] = _icon_button(CATEGORY_ICONS[cat], "Baumenü: " + cat, left, func(): open_drawer(cat))
+	left.add_child(HSeparator.new())
+	_icon_button("ernten", "Alle reifen Beete sofort ernten", left, func():
+		for c in village.buildings.keys():
+			if village.buildings.has(c) and village.buildings[c].get("progress",0.0) >= 1.0: village.harvest(c)
+		_update_ui())
+	_icon_button("sammeln", "Waldspaziergang: Holz, Stein, Nahrung und Münzen sammeln", left, func(): village.gather(); _update_ui())
+	_icon_button("verkaufen", "Händler: die vollste Ware verkaufen", left, func(): village.sell(); _update_ui())
+	_icon_button("speichern", "Speichern (F5)", left, _save)
+	# --- fold-out build menu
+	var drawer_box := _panel(Vector2(76,84),Vector2(272,600),layer,"drawer")
+	drawer = drawer_box.get_parent()
+	main_panels.append(drawer)
+	var head := HBoxContainer.new()
+	drawer_box.add_child(head)
+	drawer_title = _label("", head, 18)
+	drawer_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var close := _button("×", head, func(): drawer_open = false; drawer.visible = false)
+	close.tooltip_text = "Baumenü einklappen"
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(230,170)
+	scroll.custom_minimum_size = Vector2(262,300)
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	left.add_child(scroll)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	drawer_box.add_child(scroll)
 	catalog = VBoxContainer.new()
 	catalog.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(catalog)
@@ -272,25 +387,12 @@ func _setup_ui() -> void:
 	info_style.content_margin_top = 6
 	info_style.content_margin_bottom = 6
 	info_panel.add_theme_stylebox_override("panel", info_style)
-	left.add_child(info_panel)
+	drawer_box.add_child(info_panel)
 	catalog_info = _label("", info_panel, 12)
 	catalog_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	catalog_info.custom_minimum_size = Vector2(214, 96)
-	var harvest := _button("Alle reifen Felder ernten",left,func():
-		for c in village.buildings.keys():
-			if village.buildings.has(c) and village.buildings[c].get("progress",0.0) >= 1.0: village.harvest(c)
-		_update_ui())
-	harvest.tooltip_text = "Erntet sofort von Hand. Freie Waldlinge ernten reife Beete auch selbst."
-	_button("Im Wald sammeln",left,func(): village.gather(); _update_ui())
-	_button("Erzeugnisse verkaufen",left,func(): village.sell(); _update_ui())
-	var actions := HBoxContainer.new()
-	left.add_child(actions)
-	_button("Speichern",actions,_save)
-	_button("Laden",actions,func():
-		if _load(true): world.rebuild()
-		_update_ui())
-	_button("Neues Dorf",actions,func(): reset_dialog.popup_centered())
-	var right := _panel(Vector2(1040,152),Vector2(300,475),layer,"right")
+	catalog_info.custom_minimum_size = Vector2(240, 96)
+	drawer.visible = false
+	var right := _panel(Vector2(1040,84),Vector2(300,475),layer,"right")
 	var tabs := TabContainer.new()
 	right_tabs = tabs
 	tabs.custom_minimum_size = Vector2(268,440)
@@ -359,11 +461,14 @@ func _setup_ui() -> void:
 			trade_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			_button("Auftrag liefern",content,func(): village.deliver(); _update_ui())
 			_button("Erzeugnisse verkaufen",content,func(): village.sell(); _update_ui())
-	var bottom := _panel(Vector2(284,744),Vector2(1062,62),layer,"bottom")
-	status = _label("",bottom)
+	# --- short-lived message at the bottom instead of a permanent bar
+	var bottom := _panel(Vector2(400,744),Vector2(560,40),layer,"bottom")
+	_tight(bottom, 10)
+	toast = bottom.get_parent()
+	status = _label("",bottom,15)
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	status.custom_minimum_size.x = 1020
-	_label("Linke Maustaste: bauen / auswählen  ·  Rechtsklick: Info & Ernte  ·  Mausrad: Zoom  ·  Mittlere Maustaste / WASD: Kamera  ·  Leertaste: Pause  ·  Tab: Leisten",bottom,12)
+	status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	status.custom_minimum_size.x = 540
 	reset_dialog = ConfirmationDialog.new()
 	reset_dialog.theme = ui_theme
 	reset_dialog.title = "Ein neues Dorf?"
@@ -419,6 +524,13 @@ func _setup_options(layer: CanvasLayer) -> void:
 		slider.custom_minimum_size.x = 420
 		slider.value_changed.connect(func(value): volumes[bus[0]] = value; _apply_audio(); _save_settings())
 		box.add_child(slider)
+	var save_row := HBoxContainer.new()
+	box.add_child(save_row)
+	_button("Spielstand laden", save_row, func():
+		if _load(true): world.rebuild()
+		options.hide()
+		_update_ui())
+	_button("Neues Dorf beginnen", save_row, func(): options.hide(); reset_dialog.popup_centered())
 	for flag in [["Vollbild (F11)","fullscreen"],["Nachtlicht: Nächte bleiben hell","dark"],["Raster anzeigen (G)","grid"],["Statussymbole über Gebäuden","status"]]:
 		var check := CheckBox.new()
 		check.text = flag[0]
@@ -456,14 +568,14 @@ func _catalog() -> void:
 		if d.category != category: continue
 		var unlocked: bool = village.level() >= d.level
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(218,92)
+		b.custom_minimum_size = Vector2(246,104)
 		b.pressed.connect(func(): selected = kind; mode = "Bauen"; moving = Vector2i(-1,-1); _catalog(); _update_ui())
 		b.disabled = not unlocked
 		b.tooltip_text = _describe(kind)
 		catalog.add_child(b)
 		var row := HBoxContainer.new()
 		row.position = Vector2(6,5)
-		row.size = Vector2(204,82)
+		row.size = Vector2(232,94)
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(row)
 		if art.has(kind):
@@ -580,9 +692,31 @@ func building_state(b: Dictionary) -> String:
 func _update_ui() -> void:
 	if catalog_level != village.level(): _catalog()
 	var r: Dictionary = village.resources
-	stats.text = "Holz %d  ·  Stein %d  ·  Nahrung %d  ·  Korn %d  ·  Mehl %d  ·  Bretter %d  ·  Brot %d  ·  Münzen %d\nDorfstufe %d · %d/%d Erfahrung     Beeren %d  ·  Honig %d  ·  Marmelade %d" % [r.holz,r.stein,r.nahrung,r.getreide,r.mehl,r.bretter,r.brot,r.muenzen,village.level(),village.xp,Model.xp_for_level(village.level()+1),r.beeren,r.honig,r.marmelade]
+	for k in res_labels:
+		var full: bool = k != "muenzen" and int(r.get(k,0)) >= village.capacity(k)
+		res_labels[k].text = str(int(r.get(k,0)))
+		res_labels[k].add_theme_color_override("font_color", Color("b0433a") if full else Color("2b493b"))
+		res_chips[k].tooltip_text = "%s: %d%s" % [Model.NAMES[k], int(r.get(k,0)), "" if k == "muenzen" else " / %d Lagerplatz%s" % [village.capacity(k), " – voll!" if full else ""]]
+	level_label.text = "Stufe %d" % village.level()
+	level_label.tooltip_text = "Dorfstufe %d · %d / %d Erfahrung" % [village.level(), village.xp, Model.xp_for_level(village.level()+1)]
+	pop_label.text = str(village.population())
+	res_chips["waldlinge"].tooltip_text = "%d Waldlinge" % village.population()
+	var season_kind: String = ["fruehling","sommer","herbst","winter"][village.season()]
+	if season_icon.kind != season_kind:
+		season_icon.kind = season_kind
+		season_icon.queue_redraw()
+	season_icon.tooltip_text = Model.SEASONS[village.season()].name
+	for t in tool_buttons:
+		tool_buttons[t].modulate = Color(0.78,0.95,0.7) if (mode == t and (t != "Bauen" or drawer_open)) else Color.WHITE
+	for cname in cat_buttons:
+		cat_buttons[cname].modulate = Color(0.78,0.95,0.7) if (drawer_open and category == cname) else Color.WHITE
+	drawer_title.text = category
+	if village.notice != last_notice:
+		last_notice = village.notice
+		toast_time = 5.0
+	"Holz %d  ·  Stein %d  ·  Nahrung %d  ·  Korn %d  ·  Mehl %d  ·  Bretter %d  ·  Brot %d  ·  Münzen %d\nDorfstufe %d · %d/%d Erfahrung     Beeren %d  ·  Honig %d  ·  Marmelade %d" % [r.holz,r.stein,r.nahrung,r.getreide,r.mehl,r.bretter,r.brot,r.muenzen,village.level(),village.xp,Model.xp_for_level(village.level()+1),r.beeren,r.honig,r.marmelade]
 	xp_bar.value = village.level_progress() * 100.0
-	clock_label.text = "%s, Tag %d · %02d:%02d · %d Waldlinge  " % [Model.SEASONS[village.season()].name,village.season_day(),int(fmod(village.elapsed/240*24+7,24)),int(fmod(village.elapsed,10)*6),village.population()]
+	clock_label.text = "Tag %d · %02d:%02d" % [village.season_day(),int(fmod(village.elapsed/240*24+7,24)),int(fmod(village.elapsed,10)*6)]
 	for value in speed_buttons:
 		speed_buttons[value].modulate = Color(0.75,0.95,0.7) if float(value) == village.speed else Color.WHITE
 	status.text = village.notice
@@ -733,6 +867,8 @@ func _update_people_panel() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_ESCAPE:
+			drawer_open = false
+			drawer.visible = false
 			moving = Vector2i(-1,-1)
 			mode = "Info"
 			inspected_resident = -1
@@ -746,6 +882,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.keycode == KEY_TAB:
 			panels_visible = not panels_visible
 			for panel in main_panels: panel.visible = panels_visible
+			drawer.visible = panels_visible and drawer_open
 		_update_ui()
 	if event is InputEventMouseMotion:
 		if dragging: camera.position -= event.relative / camera.zoom
@@ -765,8 +902,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		# building (roof, walls, crown), not just its ground cell.
 		if event.button_index == MOUSE_BUTTON_RIGHT or (event.button_index == MOUSE_BUTTON_LEFT and mode in ["Info","Abriss"]) or (mode == "Bewegen" and moving.x < 0):
 			var picked: Vector2i = world.building_at(world_pos)
-			if picked.x >= 0 and not (village.occupied.has(c) and village.anchor(c) != picked and village.buildings[village.anchor(c)].type != "Weg"):
-				c = picked
+			# What the player sees in front wins (a roof hides the cell behind it).
+			if picked.x >= 0: c = picked
 		if event.button_index == MOUSE_BUTTON_LEFT and mode == "Info":
 			var rid: int = world.resident_at(world_pos)
 			if rid >= 0:
@@ -821,6 +958,9 @@ func _process(delta: float) -> void:
 	world.update(delta, dt)
 	ui_timer += delta
 	save_timer += delta
+	toast_time -= delta
+	toast.visible = toast_time > 0.0 and status.text != ""
+	toast.modulate.a = clampf(toast_time / 0.6, 0.0, 1.0)
 	if ui_timer >= 0.3:
 		ui_timer = 0
 		_update_ui()
@@ -954,19 +1094,22 @@ func play_sfx(kind: String, at: Vector2) -> void:
 	if distance > 900: return
 	sfx.play(kind, at, village.speed)
 
+func _show_right(on: bool) -> void:
+	layout_panels.right.visible = on
+
 func _layout_ui() -> void:
-	if layout_panels.size() < 4: return
+	if layout_panels.size() < 5: return
 	var extent := get_viewport_rect().size
 	var top: Control = layout_panels.top
-	top.custom_minimum_size.x = extent.x-36
-	top.size.x = extent.x-36
+	top.custom_minimum_size.x = extent.x-20
+	top.size.x = extent.x-20
 	var right: Control = layout_panels.right
-	right.position.x = extent.x-right.size.x-20
+	right.position = Vector2(extent.x-right.size.x-10, 84)
 	var left: Control = layout_panels.left
-	left.custom_minimum_size.y = extent.y-168
-	left.size.y = extent.y-168
+	left.position = Vector2(10, 84)
+	var drawer_panel: Control = layout_panels.drawer
+	drawer_panel.position = Vector2(76, 84)
+	drawer_panel.custom_minimum_size.y = extent.y-104
+	drawer_panel.size.y = extent.y-104
 	var bottom: Control = layout_panels.bottom
-	bottom.position = Vector2(304,extent.y-80)
-	bottom.custom_minimum_size.x = extent.x-324
-	status.custom_minimum_size.x = extent.x-356
-	bottom.size.x = extent.x-324
+	bottom.position = Vector2((extent.x-bottom.size.x)*0.5, extent.y-bottom.size.y-14)

@@ -133,6 +133,30 @@ const CROPS := {
 	"sonnenblumen": {"label": "Sonnenblumen", "duration": 66.0, "harvest": {"sonnenblumen": 4, "muenzen": 4}, "seed": 4, "level": 6, "anim": "reap", "color": Color("f2c330")},
 }
 
+## Lit windows, lanterns and ovens per painted picture (position inside
+## the picture, 0..1). Found by colour analysis of the atlas and checked by
+## eye (build/qa/windows_detect.png); roofs, flowers and hives removed.
+const WINDOW_LIGHTS := {
+	"Haus": [Vector2(0.319, 0.655), Vector2(0.447, 0.415), Vector2(0.455, 0.687), Vector2(0.783, 0.671)],
+	"Forsthaus": [Vector2(0.335, 0.671)],
+	"Saegewerk": [Vector2(0.378, 0.676)],
+	"Muehle": [Vector2(0.527, 0.479), Vector2(0.559, 0.639), Vector2(0.655, 0.767)],
+	"Baeckerei": [Vector2(0.37, 0.62), Vector2(0.70, 0.60)],
+	"Steinbruch": [Vector2(0.517, 0.548)],
+	"Kochhaus": [Vector2(0.351, 0.511), Vector2(0.655, 0.623)],
+	"Gasthaus": [Vector2(0.407, 0.591), Vector2(0.644, 0.314), Vector2(0.612, 0.58), Vector2(0.415, 0.319), Vector2(0.527, 0.591)],
+	"Laterne": [Vector2(0.602, 0.35)],
+	# Own painted houses of the specialists (special-houses.png).
+	"HausHolz": [Vector2(0.457, 0.639), Vector2(0.684, 0.630)],
+	"HausGarten": [Vector2(0.347, 0.479), Vector2(0.543, 0.696), Vector2(0.627, 0.479), Vector2(0.342, 0.664)],
+	"HausStein": [Vector2(0.386, 0.483), Vector2(0.652, 0.600)],
+	"HausBau": [Vector2(0.381, 0.641), Vector2(0.576, 0.664)],
+	"HausBaecker": [Vector2(0.35, 0.46), Vector2(0.58, 0.64), Vector2(0.72, 0.69)],
+	"HausImker": [Vector2(0.32, 0.43), Vector2(0.68, 0.56), Vector2(0.31, 0.69)],
+	"HausKraeuter": [Vector2(0.703, 0.381), Vector2(0.684, 0.599), Vector2(0.464, 0.649)],
+	"HausHandel": [Vector2(0.588, 0.666), Vector2(0.726, 0.583)],
+}
+
 ## Unit prices of the travelling merchant.
 const PRICES := {"kaese": 9, "wolle": 4, "eier": 3, "milch": 3, "marmelade": 10, "raeucherfisch": 7, "honig": 6, "kuerbis": 5, "brot": 8, "bretter": 4, "mehl": 4, "kohl": 3, "flachs": 3, "sonnenblumen": 3, "fisch": 3, "beeren": 3, "karotten": 2, "kartoffeln": 2, "zwiebeln": 2, "getreide": 2, "holz": 1, "stein": 1}
 

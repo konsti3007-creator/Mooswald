@@ -29,3 +29,13 @@ Godot 4.7.2 stable wurde aus dem vorhandenen Download verwendet. Die Windows-Spi
 - **Geräusche**: alle zur Laufzeit synthetisiert (`scripts/audio/sfx.gd`), keine Audiodateien.
 - **Besondere Bewohner**: Namen (Birka, Ilvi, Kolbo, Zimmerling, Mehlwin, Summa, Salbei, Taler), Rollen und Effekte sind eigene Erfindungen.
 - **APK-Analyse 0.4.0**: erneut nur Inhaltsverzeichnis und Dateiformate betrachtet. Die APK enthält 13 binäre Figurendefinitionen (überwiegend Animations-Bildtabellen), eine Fortschrittstabelle mit exponentiell steigender Erfahrungskurve und rund 230 Story-/Dialogdateien. Übernommen wurde nur das allgemeine Prinzip „einzelne benannte Figuren mit eigener Rolle, an Gebäude gebunden“. Keine Daten, Werte, Namen, Texte, Grafiken, Schriften oder Musik der APK wurden extrahiert oder eingebunden.
+
+
+## Ergänzung 0.8.0 – KI-generierte Bilder (AiFlix)
+
+Erzeugt über die AiFlix-Anbindung des Besitzers (Modell Nano Banana Pro, 1K, je 2 Credits; im AiFlix-Projekt „Herz aus Handarbeit“ nur als Datei gespeichert, `attach: none`), danach lokal freigestellt:
+
+- `assets/branding/logo_original.png` → `logo.png` (freigestellt), `icon.png`, `icon128.png`: Logo „Mooswinkel“ mit Wurzelhäuschen unter einer Eichelkappe.
+- `assets/painted/source_houses/*.png` (Originale, Magenta-Hintergrund) → `assets/painted/special-houses.png` (Atlas 4 × 2, freigestellt, Bodenlinie wie der bestehende Atlas): Häuser der acht besonderen Bewohner.
+- Vorgaben in jedem Prompt: eigenes Dorfaufbauspiel, gemalter Bilderbuchstil, keine Figuren, keine Schrift (außer dem Logo-Schriftzug), keine bestehenden Figuren oder Marken. Vollständige Prompts: `docs/ART.md`.
+- Insgesamt 18 Credits (Logo 2, Häuser 16).

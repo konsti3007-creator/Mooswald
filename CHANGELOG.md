@@ -1,5 +1,14 @@
 # Änderungen
 
+## 0.8.0 – Neues Gesicht, Nachtlicht und eigene Häuser
+
+- **Logo** (KI-generiert über AiFlix) im Spiel, als App-Symbol und Startbild.
+- **Neue Oberfläche**: Kopfleiste mit Logo, Waren als Symbole mit Anzahl (rot bei vollem Lager, Tooltip mit Lagerplatz), Dorfstufe mit Fortschritt, Waldlinge, Jahreszeit und Uhrzeit, Tempo/Optionen/Hilfe/Beenden als Symbole. Links eine Werkzeugleiste mit Symbolen (Bauen, Info, Bewegen, Abriss, sieben Baukategorien, Ernten, Sammeln, Verkaufen, Speichern); das **Baumenü klappt aus** und wieder ein. Statusmeldungen erscheinen kurz unten. Laden und Neues Dorf liegen in den Optionen.
+- **Individuelle Bewohnerhäuser**: alle acht besonderen Häuser haben eigene gemalte Bilder (Blockhütte, Gärtnerhaus mit Gewächshaus, Steinkate mit Kristall, Werkhaus mit Kran, Brotlaib-Bäckerei, Imkerhaus, Kräuterhütte, Händlerhaus).
+- **Nachtlicht**: weicher Übergang in Dämmerung und Nacht; Fenster, Laternen und Öfen leuchten (Lichtpunkte je Bild per Farbanalyse ermittelt und von Hand geprüft), Waldlinge tragen nachts ein kleines Licht, Glühwürmchen.
+- **Tiere im Stil der Waldlinge**: größere Köpfe, Glanzaugen, Wangen, heller Bauch, Fellstriche, weichere Farben.
+- **Behoben: Verschieben/Abriss traf das falsche Objekt**, wenn man auf ein Dach klickte (Bodenzelle dahinter hatte Vorrang). Auswahl jetzt pixelgenau nach dem sichtbaren Bild; Prüfskript `tests/move_pick.gd`.
+
 ## 0.7.0 – Tiere und klare Hinweise (Phase 3)
 
 - **Behoben: „Anglerhütte nicht baubar / Ausbau nicht möglich“**: Ursache war fehlendes Geld (geprüft am echten Spielstand: 22 Münzen, aber 2400 Holz und 618 Bretter). Meldungen nennen jetzt genau, was fehlt („Es fehlen 18 Münzen.“), auch direkt am Mauszeiger in der Bauvorschau; der Ausbauknopf zeigt Kosten oder Fehlbetrag. Gründe wie „Braucht Wasser in der Nähe“ oder „Kein freier Bauplatz“ erscheinen ebenfalls am Mauszeiger.
