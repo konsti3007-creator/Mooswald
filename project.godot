@@ -18,12 +18,11 @@ config/name="Mooswinkel - Dein kleines Walddorf"
 config/description="Eigenstaendiges, offline spielbares Dorf-Aufbauspiel."
 config/version="0.8.0"
 run/main_scene="res://main.tscn"
-config/icon="res://assets/branding/icon.png"
-boot_splash/image="res://assets/branding/logo.png"
-boot_splash/bg_color=Color(0.274, 0.43, 0.235, 1)
-boot_splash/fullsize=false
-boot_splash/use_filter=true
 config/features=PackedStringArray("4.7", "GL Compatibility")
+boot_splash/bg_color=Color(0.274, 0.43, 0.235, 1)
+boot_splash/stretch_mode=0
+boot_splash/image="res://assets/branding/logo.png"
+config/icon="res://assets/branding/icon.png"
 
 [display]
 
